@@ -27,6 +27,7 @@ public class UserService {
 
         // Hash password trước khi lưu
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRole("USER"); // Mặc định role là USER
 
         return userRepository.save(user);
     }

@@ -16,4 +16,27 @@ public interface TodoRepository extends JpaRepository<Todo, UUID> {
     Page<Todo> findByUserAndCompleted(User user, Boolean completed, Pageable pageable);
 
     Page<Todo> findByUserAndTitleContainingIgnoreCase(User user, String keyword, Pageable pageable);
+
+    Page<Todo> findByUserAndPriority(User user, String priority, Pageable pageable);
+
+    // dueDate filtering
+    Page<Todo> findByUserAndDueDateBetween(
+            User user,
+            java.time.LocalDate start,
+            java.time.LocalDate end,
+            Pageable pageable);
+
+    Page<Todo> findByUserAndDueDateBeforeAndCompleted(
+            User user,
+            java.time.LocalDate date,
+            Boolean completed,
+            Pageable pageable);
+
+    // Variation used for upcoming where we *don't* necessarily filter by completed.
+    Page<Todo> findByUserAndDueDateAfterAndDueDateLessThanEqual(
+            User user,
+            java.time.LocalDate after,
+            java.time.LocalDate lessThanEqual,
+            Pageable pageable);
+
 }

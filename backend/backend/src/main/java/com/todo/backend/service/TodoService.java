@@ -1,5 +1,6 @@
 package com.todo.backend.service;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -81,6 +82,50 @@ public class TodoService {
                 PageRequest.of(page, size)
         );
     }
+
+    // Lọc theo priority + phân trang
+    public Page<Todo> filterByPriority(User user, String priority, int page, int size) {
+
+        return todoRepository.findByUserAndPriority(user, priority, PageRequest.of(page, size));
+    }
+
+    // Lọc theo thời gian + phân trang
+    public Page<Todo> filterByTime(User user, String type, int page, int size) {
+
+        LocalDate today = LocalDate.now();
+        LocalDate weekLater = today.plusDays(7);
+
+        if ("today".equalsIgnoreCase(type)) {
+            return todoRepository.findByUserAndDueDateBetween(user, today, today, PageRequest.of(page, size));
+        }
+
+        if ("week".equalsIgnoreCase(type)) {
+            // Bao gồm today
+            return todoRepository.findByUserAndDueDateBetween(user, today, weekLater, PageRequest.of(page, size));
+        }
+
+        if ("overdue".equalsIgnoreCase(type)) {
+            // dueDate < today && completed=false
+            return todoRepository.findByUserAndDueDateBeforeAndCompleted(
+                    user,
+                    today,
+                    false,
+                    PageRequest.of(page, size));
+        }
+
+        if ("upcoming".equalsIgnoreCase(type)) {
+            // upcoming = dueDate > today && dueDate <= weekLater
+            return todoRepository.findByUserAndDueDateAfterAndDueDateLessThanEqual(
+                    user,
+                    today,
+                    weekLater,
+                    PageRequest.of(page, size));
+        }
+
+        // fallback: nếu type không hợp lệ thì trả về tất cả
+        return todoRepository.findByUser(user, PageRequest.of(page, size));
+    }
+
 
     // Hàm dùng chung
     private Todo findTodoByIdAndUser(User user, UUID id) {

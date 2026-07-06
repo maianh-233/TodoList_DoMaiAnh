@@ -25,7 +25,6 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/todos")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:5173")
 public class TodoController {
 
     private final TodoService todoService;
@@ -121,5 +120,33 @@ public class TodoController {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         return todoService.filter(user, completed, page, size);
+    }
+
+    // Lọc theo priority
+    @GetMapping("/priority")
+    public Page<Todo> filterByPriority(
+            @RequestParam UUID userId,
+            @RequestParam String priority,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return todoService.filterByPriority(user, priority, page, size);
+    }
+
+    // Lọc theo thời gian
+    @GetMapping("/time")
+    public Page<Todo> filterByTime(
+            @RequestParam UUID userId,
+            @RequestParam String type,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return todoService.filterByTime(user, type, page, size);
     }
 }
