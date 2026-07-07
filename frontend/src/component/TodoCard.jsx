@@ -47,9 +47,7 @@ export function TodoCard({ todo, onToggleComplete, onViewDetail, onEdit, onDelet
         </div>
 
         <div className="flex flex-col gap-1">
-          <button onClick={() => onViewDetail(todo.id)} className="p-2 hover:bg-gray-100 rounded-2xl">
-            <Eye className="w-5 h-5 text-gray-400" />
-          </button>
+
           <button onClick={() => onEdit(todo.id)} className="p-2 hover:bg-gray-100 rounded-2xl">
             <Edit2 className="w-5 h-5 text-gray-400" />
           </button>

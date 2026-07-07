@@ -38,13 +38,17 @@ export function Sidebar({
       {/* Sidebar – dùng chung */}
         <aside
           className={`
-            fixed lg:static
+            fixed
             top-0 left-0 z-50
             h-screen w-72
             bg-white/80 backdrop-blur
             border-r border-pink-100/60
             transition-transform duration-300
+
+            /* MOBILE */
             ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+
+            /* DESKTOP */
             lg:translate-x-0
           `}
         >
